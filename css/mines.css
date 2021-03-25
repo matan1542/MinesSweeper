@@ -104,6 +104,7 @@ button {
 .level12 {
   box-shadow: 5px 5px 5px rgb(44, 44, 43);
   background-color: rgb(255, 0, 0);
+ 
 }
 .level12:hover {
   background-color: rgb(139, 37, 37);
@@ -136,6 +137,31 @@ button {
   box-shadow: 2px 2px 2px rgb(44, 44, 43);
 
 }
+th{
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(0, 0, 0);
+  border-radius:12px;
+}
+.level4-score{
+  padding:10px;
+  background-color: rgb(90, 243, 85);
+}
+.level8-score{
+  padding:10px;
+  background-color: rgb(207, 230, 80);
+
+}
+.level12-score{
+  padding:10px;
+  background-color: rgb(255, 0, 0);
+
+}
+.scores-container{
+  margin-top: 10px;
+  border: none;
+  width:70%;
+  height:125px;
+}
 .time-text{
   text-align:center;
   padding-top:25px;
@@ -150,13 +176,5 @@ button {
   font-weight: 700;
   color: black;
 }
-.fadeOut{
-  transition: 1.0s;
-  opacity: 0;
-  }
-  .fadeIn{
-    transition: 1.0s;
-    opacity: 1;
-    }
-    
+
   

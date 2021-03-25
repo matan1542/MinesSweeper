@@ -1,27 +1,54 @@
 <!DOCTYPE html>
+<html lang="en">
 
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>MineSweeper</title>
-        <link rel="stylesheet" href="css/app.css">
-    </head>
-    <body lenguage='en' onload="initGame()"> 
-        <h1>MineSweeper</h1>
-        <div class="container">
-            <div class="level">
-                <input type="radio" id="1" name="level" value="0" onclick="initGame(this)" checked><label>Beginner</label>
-                <input type="radio" id="2" name="level" value="1" onclick="initGame(this)"><label>Medium</label>
-                <input type="radio" id="3" name="level" value="2" onclick="initGame(this)"><label>Expert</label>
-            </div>
-            <div class="timer">Game Time: <span></span></div>
-            <div class="next">Next Number: <span></span></div>
-            <div class="lives"></div>
-            <button class="status" onclick="initGame()"></button>
-            <div class="board-container"></div>    
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MinesSweeper</title>
+    <link rel="stylesheet" href="css/mines.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+        integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
+</head>
+
+<body onload="initGame()">
+    <div class="headline-container">
+        <h1 class="title-headline"> Welcome to the Mines Sweeper Game! be careful where you go <i
+                class="fas fa-minus-circle"></i> </h1>
+        <button class="current-mood" onclick="restartGame()">&#128515 </button>
+        <div class="time-container">
+            <p class="time-text"> Current Time: <span class="time">0:00</span> </p>
         </div>
+        <div>
+            <table class="scores-container">
+                <thead>
+                    <th class="level4-score">Level 4 Best Score: <span class="level4-bestscore"> </span> </th>
+                    <th class="level8-score">Level 8 Best Score: <span class="level8-bestscore"> </span></th>
+                    <th class="level12-score">Level 12 Best Score: <span class="level12-bestscore"> </span></th>
+                </thead>
 
-        <script src="js/util.js"></script>
-        <script src="js/app.js"></script>
-    </body>
+            </table>
+        </div>
+        <div class="levels">
+            <button onclick="setLevel(4)" class="level4">Level 4 X 4</button>
+            <button onclick="setLevel(8)" class="level8">Level 8 X 8</button>
+            <button onclick="setLevel(12)" class="level12">Level 12 X 12</button>
+        </div>
+        <p class="lives-amount"> <span class="icons"></span> </p>
+    </div>
+    <div>
+        <p class="hint-amount"> <span class="hint-icons"></span> </p>
+        <button onclick="hint()" class="hint">Hint <i class="fas fa-lightbulb"></i></button>
+    </div>
+    <div class="board-container"></div>
+    <!-- <button hidden class="reset" onclick="reset()">Restart the game please!</button> -->
+
+
+    <script src="js/mines.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/utils.js"></script>
+</body>
+
 </html>

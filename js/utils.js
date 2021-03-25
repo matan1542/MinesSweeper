@@ -66,17 +66,13 @@ function getRandomIntInclusive(min, max) {
 
 function startTimer() {
     var timer = document.querySelector('.time');
-    var countMil = 0;
-    var countSec = 1;
+    gGame.secsPassed = 0;
 
     countInterval = setInterval(() => {
-        timer.innerText = `${countSec}.${countMil}`
-        countMil++;
-        if (countMil > 100) {
-            countSec++;
-            countMil = 0;
-        }
-    }, 10)
+        timer.innerText = `${gGame.secsPassed} Sec`
+        gGame.secsPassed++;
+    }, 1000)
+    
 }
 
 function stopTimer() {

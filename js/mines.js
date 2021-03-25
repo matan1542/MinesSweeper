@@ -4,6 +4,7 @@ var MINE = '<i class="fas fa-bomb"></i>';
 var LIVES = '<i class="fas fa-heart"></i>';
 var HINTS = '<i class="far fa-lightbulb"></i>';
 var FLAG = '<i class="far fa-flag"></i>';
+var EMPTY = '';
 var livesAmount = 1;
 var hintsAmount = 1;
 var smile = '&#128515';
@@ -13,11 +14,15 @@ var intenseFace = '&#128556 ';
 var countClicks = 0;
 var countRightClick = 0;
 var bombsCount = 0;
+var bombShown = 0;
+var bestTimeCounter = Infinity;
 var countInterval;
 var victory;
 var elBtn = document.querySelector('.current-mood');
 var levelsContainer = document.querySelector('.levels');
 var elHintBtn = document.querySelector('.hint');
+
+
 
 
 var countMisplaceFlags = 0;//In case the flag wasn't set in the exact location of the mine
@@ -30,11 +35,15 @@ var gGame = {
     isHint: false,
     shownCount: 0,
     markedCount: 0,
-    secsPassed: 0
+    secsPassed: Infinity
 };
 
 
 function initGame() {
+    if (!localStorage.level4) {
+        createLocalStorage()
+    }
+    updateScoreDom()
     createLives(livesAmount);
     createHints(hintsAmount);
     gBoard = buildBoard(gLevel.SIZE);
@@ -54,8 +63,11 @@ function buildBoard(SIZE) {
     return board;
 }
 
+
+
 function cellClicked(elCell, i, j) {
-    if (gGame.isHint) return;
+    if (gGame.isHint || victory) return;
+
     if (livesAmount === 0) {
         gameOver(sadFace)
         return
@@ -74,6 +86,9 @@ function cellClicked(elCell, i, j) {
         gGame.isOn = true;
     }
     if (gBoard[i][j].isMine && gGame.isOn && !gBoard[i][j].isMarked && !gBoard[i][j].isShown) {
+        gBoard[i][j].isMarked = true;
+        bombShown++;
+        victory = checkVictory();
         livesAmount--;
         if (livesAmount === 0) {
             stopTimer();
@@ -99,12 +114,11 @@ function cellClicked(elCell, i, j) {
 }
 
 function rightMouseClick(elCell, i, j) {
-    if (gGame.isHint) return;
-    if (livesAmount === 0 || victory) return;
+    if (gGame.isHint || livesAmount === 0 || victory) return;
     var strHtml = '';
     if (elCell.innerHTML === FLAG) {
         gBoard[i][j].isMarked = false;
-        strHtml = '';
+        strHtml = EMPTY;
         countMisplaceFlags--;
         elCell.innerHTML = strHtml;
     } else {
@@ -116,14 +130,17 @@ function rightMouseClick(elCell, i, j) {
     victory = checkVictory();
 }
 
-//in Case Game Over
+
 
 
 function checkVictory() {
     var markAmount = getMarkCount();
-    if (markAmount.length === gLevel.MINES && countMisplaceFlags === markAmount.length) {
+    if (markAmount.length === gLevel.MINES && (countMisplaceFlags + bombShown) === markAmount.length) {
         countMisplaceFlags = 0;
         gameOver(glassFace);
+        stopTimer();
+        checkBestTime(gLevel.SIZE, gGame.secsPassed - 1);
+        updateScoreDom()
         return true;
     }
     return false;
@@ -131,7 +148,6 @@ function checkVictory() {
 }
 function hint() {
     if (hintsAmount === 0 || !livesAmount) {
-
         return
     }
     gGame.isHint = true;
@@ -139,10 +155,11 @@ function hint() {
 
 
 function hintClicked(elBtn, i, j) {
-    if (hintsAmount === 0) return
+    if (hintsAmount === 0)  return
     if (!gGame.isHint) return
     var pos = { i: i, j: j };
     hintsAmount--;
+    if(hintsAmount === 0) elHintBtn.hidden = true;
     createHints(hintsAmount);
     expandForHint(pos);
 
@@ -159,7 +176,22 @@ function restartGame() {
     //For continuation of this project and gLevel set
 }
 
+function updateScoreDom() {
+    var level4 = document.querySelector('.level4-bestscore');
+    var level8 = document.querySelector('.level8-bestscore');
+    var level12 = document.querySelector('.level12-bestscore');
+    var bestTimeLevel4 = localStorage.getItem('level4');
+    var bestTimeLevel8 = localStorage.getItem('level8');
+    var bestTimeLevel12 = localStorage.getItem('level12');
+    var bestTime4 = (+bestTimeLevel4 === Infinity) ? ' ' : bestTimeLevel4;
+    var bestTime8 = (+bestTimeLevel8 === Infinity) ? ' ' : bestTimeLevel8;
+    var bestTime12 = (+bestTimeLevel12 === Infinity) ? '' : bestTimeLevel12;
 
+    level4.innerText = bestTime4 + ' Sec';
+    level8.innerText = bestTime8 + ' Sec';
+    level12.innerText = bestTime12 + ' Sec';
+
+}
 
 function setLevel(SIZE) {
     var time = document.querySelector('.time');
@@ -169,6 +201,8 @@ function setLevel(SIZE) {
     hintsAmount = (SIZE === 4) ? 1 : 3;
     elHintBtn.hidden = false;
     countClicks = 0;
+    bombShown = 0;
+    stopTimer();
     time.innerText = '0:00'
     countMisplaceFlags = 0;
     victory = false;
@@ -177,6 +211,27 @@ function setLevel(SIZE) {
     initGame();
 }
 
+
+
+
+
+function checkBestTime(size, time) {
+    var bestTime = localStorage.getItem(`level${size}`);
+    if (time < +bestTime) {
+        updateLocalStorage(size, time);
+    }
+}
+
+function updateLocalStorage(size, time) {
+    localStorage.setItem(`level${size}`, time);
+}
+
+
+function createLocalStorage() {
+    localStorage.setItem("level4", Infinity);
+    localStorage.setItem("level8", Infinity);
+    localStorage.setItem("level12", Infinity);
+}
 
 window.document.oncontextmenu = function () {
     return false;

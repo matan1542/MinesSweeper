@@ -48,15 +48,32 @@ function createCell() {
 }
 
 
-
+// Check large condition that checks if there are neighbors that are greater then 0 that are not mines or shown and if there is.. stop recursion  
 function expandShown(pos) {
-    for (var i = pos.i - 1; i <= pos.i + 1; i++) {
+    var countMines = gBoard[pos.i][pos.j].minesAroundCount;
+    if (!gBoard[pos.i][pos.j].isMine && !gBoard[pos.i][pos.j].isMarked && !gBoard[pos.i][pos.j].isShown && !countMines) {
+        gBoard[pos.i][pos.j].isShown = true;
+        renderCell(pos.i,pos.j, EMPTY);
+        gGame.shownCount++;
+        renderNeighbors(pos.i, pos.j);
+    } else if (countMines > 0 && !gBoard[pos.i][pos.j].isShown) {
+        gBoard[pos.i][pos.j].isShown = true;
+        renderCell(pos.i,pos.j, countMines);
+        gGame.shownCount++;
+    }
+}
+
+function renderNeighbors(cellI, cellJ) {
+    for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= gBoard.length) continue;
-        for (var j = pos.j - 1; j <= pos.j + 1; j++) {
-            if (j < 0 || j >= gBoard[0].length) continue;
-            if (!gBoard[i][j].isMine && !gBoard[i][j].isMarked) {
-                var countMines = gBoard[i][j].minesAroundCount;
-                renderCell(i, j, countMines);
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            if (i === cellI && j === cellJ)
+                continue;
+            if (j < 0 || j >= gBoard[i].length)
+                continue;
+            if (gBoard[i][j].minesAroundCount >= 0 && !gBoard[i][j].isShown) {
+                var pos = { i: i, j: j }
+                expandShown(pos)
             }
         }
     }
@@ -68,7 +85,7 @@ function expandForHint(pos) {
         if (i < 0 || i >= gBoard.length) continue;
         for (var j = pos.j - 1; j <= pos.j + 1; j++) {
             if (j < 0 || j >= gBoard[0].length) continue;
-            if (!gBoard[i][j].isMarked) {
+            if (!gBoard[i][j].isMarked && !gBoard[i][j].isShown) {
                 var countMines = gBoard[i][j].minesAroundCount;
                 renderCell(i, j, countMines);
             }
@@ -85,8 +102,13 @@ function unRevealForHint(pos) {
         if (i < 0 || i >= gBoard.length) continue;
         for (var j = pos.j - 1; j <= pos.j + 1; j++) {
             if (j < 0 || j >= gBoard[0].length) continue;
-            if (!gBoard[i][j].isMarked) {
-                var className = document.querySelector(`.cell.cell${i}-${j}`);
+            var className = document.querySelector(`.cell.cell${i}-${j}`);
+            if(gBoard[i][j].isMarked && gBoard[i][j].isMine && !gBoard[i][j].isShown){
+                className.classList.remove('clicked')
+                className.innerHTML = FLAG;
+                gBoard[i][j].isMarked = true;
+            }
+            if (!gBoard[i][j].isMarked && !gBoard[i][j].isShown ) {
                 className.classList.remove('clicked')
                 var countMines = ' ';
                 className.innerText = countMines;
@@ -169,13 +191,18 @@ function getMarkCount() {
     var countMark = 0;
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard[0].length; j++) {
-            if (gBoard[i][j].isMarked && gBoard[i][j].isMine) {
+            if (gBoard[i][j].isMarked && gBoard[i][j].isMine && !gBoard[i][j].isShown) {
                 isMarked.push(gBoard[i][j]);
                 countMark++;
+            }
+            if ( gBoard[i][j].isMine && gBoard[i][j].isShown ) {
+                isMarked.push(gBoard[i][j]);
             }
         }
     }
     gGame.markedCount = countMark;
     return isMarked;
 }
+
+
 
