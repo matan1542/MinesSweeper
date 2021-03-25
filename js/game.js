@@ -3,6 +3,7 @@
 function onFirstClick(elCell, i, j) {
     gBoard[i][j].isMine = false;
     gBoard[i][j].isShown = true;
+    gGame.shownCount++;
     elCell.innerText = '';
     gGame.isOn = true;
     placeMines(gBoard, 1);
@@ -10,6 +11,7 @@ function onFirstClick(elCell, i, j) {
     var pos = { i: i, j: j }
     expandShown(pos);
 }
+
 
 function gameOver(value) {
     gGame.isOn = false;
@@ -55,7 +57,7 @@ function expandShown(pos) {
         gBoard[pos.i][pos.j].isShown = true;
         renderCell(pos.i,pos.j, EMPTY);
         gGame.shownCount++;
-        renderNeighbors(pos.i, pos.j);
+        findNeighbors(pos.i, pos.j);
     } else if (countMines > 0 && !gBoard[pos.i][pos.j].isShown) {
         gBoard[pos.i][pos.j].isShown = true;
         renderCell(pos.i,pos.j, countMines);
@@ -63,7 +65,7 @@ function expandShown(pos) {
     }
 }
 
-function renderNeighbors(cellI, cellJ) {
+function findNeighbors(cellI, cellJ) {
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= gBoard.length) continue;
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
@@ -164,7 +166,7 @@ function placeMines(board, amount) {
     for (var i = 0; i < amount; i++) {
         var randI = getRandomIntInclusive(0, board.length - 1)
         var randJ = getRandomIntInclusive(0, board.length - 1)
-        if (!gBoard[randI][randJ].isMine) {
+        if (!gBoard[randI][randJ].isMine && !gBoard[randI][randJ].isShown) {
             board[randI][randJ].isMine = true;
         } else {
             i--;
@@ -180,6 +182,7 @@ function printAllMines() {
                 className.classList.add('clicked');
                 className.innerHTML = MINE;
                 gBoard[i][j].isShown = true;
+                gGame.shownCount++;
             }
         }
     }
@@ -203,6 +206,8 @@ function getMarkCount() {
     gGame.markedCount = countMark;
     return isMarked;
 }
+
+
 
 
 

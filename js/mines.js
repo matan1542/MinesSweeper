@@ -7,6 +7,7 @@ var FLAG = '<i class="far fa-flag"></i>';
 var EMPTY = '';
 var livesAmount = 1;
 var hintsAmount = 1;
+var safeClicks = 1;
 var smile = '&#128515';
 var sadFace = '&#128530';
 var glassFace = '&#128526 ';
@@ -21,6 +22,9 @@ var victory;
 var elBtn = document.querySelector('.current-mood');
 var levelsContainer = document.querySelector('.levels');
 var elHintBtn = document.querySelector('.hint');
+var elSafeSpan = document.querySelector('.safe-clicks');
+var safeContainer = document.querySelector('.safe-click-container');
+
 
 
 
@@ -33,6 +37,7 @@ var gLevel = {
 var gGame = {
     isOn: false,
     isHint: false,
+    isSafe: false,
     shownCount: 0,
     markedCount: 0,
     secsPassed: Infinity
@@ -66,8 +71,7 @@ function buildBoard(SIZE) {
 
 
 function cellClicked(elCell, i, j) {
-    if (gGame.isHint || victory) return;
-
+    if (gGame.isHint || victory || gGame.isSafe) return;
     if (livesAmount === 0) {
         gameOver(sadFace)
         return
@@ -76,6 +80,7 @@ function cellClicked(elCell, i, j) {
         return;
     }
     elCell.classList.add('clicked');
+
     countClicks++;
     if (countClicks === 1) {
         startTimer();
@@ -85,7 +90,7 @@ function cellClicked(elCell, i, j) {
     } else {
         gGame.isOn = true;
     }
-    if (gBoard[i][j].isMine && gGame.isOn && !gBoard[i][j].isMarked && !gBoard[i][j].isShown) {
+    if (gBoard[i][j].isMine && gGame.isOn && !gBoard[i][j].isMarked) {
         gBoard[i][j].isMarked = true;
         bombShown++;
         victory = checkVictory();
@@ -95,7 +100,11 @@ function cellClicked(elCell, i, j) {
             printAllMines();
             elBtn.innerHTML = sadFace;
         }
-        gBoard[i][j].isShown = true;
+        if (!gBoard[i][j].isShown) {
+            gBoard[i][j].isShown = true;
+            gGame.shownCount++;
+        }
+
         elCell.innerHTML = MINE;
         createLives(livesAmount);
         // elBtn.innerHTML = intenseFace;
@@ -103,8 +112,10 @@ function cellClicked(elCell, i, j) {
     if (gGame.isOn) {
         var pos = { i: i, j: j }
         checkMines();
-        if (gBoard[i][j].minesAroundCount > 0 && !gBoard[i][j].isMine && !gBoard[i][j].isMarked) {
+        if (gBoard[i][j].minesAroundCount > 0 && !gBoard[i][j].isMine && !gBoard[i][j].isMarked && !gBoard[i][j].isShown) {
             var countMines = gBoard[i][j].minesAroundCount;
+            gBoard[i][j].isShown = true;
+            gGame.shownCount++;
             renderCell(i, j, countMines);
         } else {
             expandShown(pos);
@@ -114,7 +125,7 @@ function cellClicked(elCell, i, j) {
 }
 
 function rightMouseClick(elCell, i, j) {
-    if (gGame.isHint || livesAmount === 0 || victory) return;
+    if (gGame.isHint || livesAmount === 0 || victory || gBoard[i][j].isShown) return;
     var strHtml = '';
     if (elCell.innerHTML === FLAG) {
         gBoard[i][j].isMarked = false;
@@ -154,12 +165,13 @@ function hint() {
 }
 
 
-function hintClicked(elBtn, i, j) {
-    if (hintsAmount === 0)  return
+
+function hintClicked(i, j) {
+    if (hintsAmount === 0 || gBoard[i][j].isShown) return
     if (!gGame.isHint) return
     var pos = { i: i, j: j };
     hintsAmount--;
-    if(hintsAmount === 0) elHintBtn.hidden = true;
+    if (hintsAmount === 0) elHintBtn.hidden = true;
     createHints(hintsAmount);
     expandForHint(pos);
 
@@ -171,9 +183,47 @@ function hintClicked(elBtn, i, j) {
     if (!gGame.isHint) return;
 }
 
+function initializeSafeClick(safeBtn) {
+    var emptyCells = (gLevel.SIZE ** 2) - gGame.shownCount;
+    if (safeClicks === 0 || !livesAmount || emptyCells <= gLevel.MINES) {
+        safeContainer.hidden = true;
+        return
+    }
+    gGame.isSafe = true;
+}
+
+function safeClick(elCell, i, j) {
+    if (!gGame.isSafe || safeClicks === 0 || !livesAmount || !gGame.isOn) return
+    if (gBoard[i][j].isMine) {
+        gBoard[i][j].isMine = false;
+        gBoard[i][j].isShown = true;
+        gGame.shownCount++;
+        elCell.innerText = '';
+        elCell.classList.add('clicked');
+        placeMines(gBoard, 1);
+        checkMines();
+        elSafeSpan.innerText = safeClicks;
+    } else if (gBoard[i][j].minesAroundCount > 0) {
+        gBoard[i][j].isShown = true;
+        gGame.shownCount++;
+        elCell.innerText = gBoard[i][j].minesAroundCount;
+        elCell.classList.add('clicked');
+        elSafeSpan.innerText = safeClicks;
+    } else {
+        elCell.innerText = '';
+        elCell.classList.add('clicked');
+
+    }
+    safeClicks--;
+    if(safeClicks === 0) safeContainer.hidden = true;
+    elSafeSpan.innerText = safeClicks;
+    gGame.isSafe = false;
+    var pos = { i: i, j: j }
+    expandShown(pos);
+}
+
 function restartGame() {
     setLevel(gLevel.SIZE);
-    //For continuation of this project and gLevel set
 }
 
 function updateScoreDom() {
@@ -199,9 +249,14 @@ function setLevel(SIZE) {
     gLevel.MINES = (SIZE === 4) ? 2 : (SIZE === 8) ? 12 : 30;
     livesAmount = (SIZE === 4) ? 1 : 3;
     hintsAmount = (SIZE === 4) ? 1 : 3;
+    safeClicks = (SIZE === 4) ? 1 : 3;
     elHintBtn.hidden = false;
+    gGame.shownCount = 0;
+    safeContainer.hidden = false;
     countClicks = 0;
     bombShown = 0;
+
+    elSafeSpan.innerText = safeClicks;
     stopTimer();
     time.innerText = '0:00'
     countMisplaceFlags = 0;
@@ -210,6 +265,8 @@ function setLevel(SIZE) {
     elBtn.innerHTML = smile;
     initGame();
 }
+
+
 
 
 

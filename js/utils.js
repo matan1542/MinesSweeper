@@ -6,9 +6,8 @@ function renderBoard(mat, selector) {
             var cell = mat[i][j];
             var className = 'cell cell' + i + '-' + j;
             if (!cell.isShown) {
-                strHTML += `<td oncontextmenu="rightMouseClick(this,${i},${j})" onClick="cellClicked(this,${i},${j}),hintClicked(this,${i},${j})"  class="  ${className}"></td>`
+                strHTML += `<td oncontextmenu="rightMouseClick(this,${i},${j})" onClick="cellClicked(this,${i},${j}),hintClicked(${i},${j}),safeClick(this,${i},${j})"  class="  ${className}"></td>`
             }
-
         }
         strHTML += '</tr>'
     }

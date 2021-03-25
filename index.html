@@ -38,9 +38,18 @@
         </div>
         <p class="lives-amount"> <span class="icons"></span> </p>
     </div>
-    <div>
-        <p class="hint-amount"> <span class="hint-icons"></span> </p>
+    <p class="hint-amount"> <span class="hint-icons"></span> </p>
+    <div class="hint-safe-btns">
+        
         <button onclick="hint()" class="hint">Hint <i class="fas fa-lightbulb"></i></button>
+       <div class="safe-click-container">
+        <button onclick="initializeSafeClick(this)" class="safe-click">Safe Clicks <i class="fas fa-user-shield"></i></i></button>
+        <p class="click-safe">Clicks remaining <span class="safe-clicks">1</span> </p>
+       </div>
+    </div>
+    <div>
+
+        <p class="hint-amount"> <span class="hint-icons"></span> </p>
     </div>
     <div class="board-container"></div>
     <!-- <button hidden class="reset" onclick="reset()">Restart the game please!</button> -->
