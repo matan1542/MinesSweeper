@@ -15,15 +15,21 @@
 
 <body onload="initGame()">
     <div class="headline-container">
-        <h1 class="title-headline"> Welcome to the Mines Sweeper Game! be careful to where you go <i
-                class="fas fa-minus-circle"></i> </h1>
+        <h1 class="title-headline"> Welcome to the Mines Sweeper Game! be careful where you go <i class="fas fa-minus-circle"></i> </h1>
         <button class="current-mood" onclick="restartGame()">&#128515 </button>
+        <div class="time-container">
+            <p class="time-text"> Current Time: <span class="time">0:00</span> </p>
+        </div>
         <div class="levels">
             <button onclick="setLevel(4)" class="level4">Level 4 X 4</button>
             <button onclick="setLevel(8)" class="level8">Level 8 X 8</button>
             <button onclick="setLevel(12)" class="level12">Level 12 X 12</button>
         </div>
         <p class="lives-amount"> <span class="icons"></span> </p>
+    </div>
+    <div>
+        <p class="hint-amount"> <span class="hint-icons"></span> </p>
+        <button onclick="hint()" class="hint">Hint <i class="fas fa-lightbulb"></i></button>
     </div>
     <div class="board-container"></div>
     <!-- <button hidden class="reset" onclick="reset()">Restart the game please!</button> -->

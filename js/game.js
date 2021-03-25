@@ -14,7 +14,6 @@ function onFirstClick(elCell, i, j) {
 function gameOver(value) {
     gGame.isOn = false;
     elBtn.innerHTML = value;
-    
 }
 
 function createLives(amount) {
@@ -26,6 +25,18 @@ function createLives(amount) {
     lives.innerHTML = strHtml;
 }
 
+function createHints(amount) {
+    var strHtml = '';
+    for (var i = 0; i < amount; i++) {
+        strHtml += HINTS;
+    }
+    var hints = document.querySelector('.hint-icons');
+    hints.innerHTML = strHtml;
+
+}
+
+
+
 function createCell() {
     var cell = {
         minesAroundCount: 4,
@@ -35,6 +46,8 @@ function createCell() {
     }
     return cell
 }
+
+
 
 function expandShown(pos) {
     for (var i = pos.i - 1; i <= pos.i + 1; i++) {
@@ -49,6 +62,39 @@ function expandShown(pos) {
     }
 }
 
+
+function expandForHint(pos) {
+    for (var i = pos.i - 1; i <= pos.i + 1; i++) {
+        if (i < 0 || i >= gBoard.length) continue;
+        for (var j = pos.j - 1; j <= pos.j + 1; j++) {
+            if (j < 0 || j >= gBoard[0].length) continue;
+            if (!gBoard[i][j].isMarked) {
+                var countMines = gBoard[i][j].minesAroundCount;
+                renderCell(i, j, countMines);
+            }
+            if (gBoard[i][j].isMine) {
+                renderCellHtml(i, j, MINE);
+            }
+        }
+    }
+}
+
+
+function unRevealForHint(pos) {
+    for (var i = pos.i - 1; i <= pos.i + 1; i++) {
+        if (i < 0 || i >= gBoard.length) continue;
+        for (var j = pos.j - 1; j <= pos.j + 1; j++) {
+            if (j < 0 || j >= gBoard[0].length) continue;
+            if (!gBoard[i][j].isMarked) {
+                var className = document.querySelector(`.cell.cell${i}-${j}`);
+                className.classList.remove('clicked')
+                var countMines = ' ';
+                className.innerText = countMines;
+            }
+
+        }
+    }
+}
 
 
 

@@ -2,8 +2,10 @@
 var gBoard;
 var MINE = '<i class="fas fa-bomb"></i>';
 var LIVES = '<i class="fas fa-heart"></i>';
+var HINTS = '<i class="far fa-lightbulb"></i>';
 var FLAG = '<i class="far fa-flag"></i>';
 var livesAmount = 1;
+var hintsAmount = 1;
 var smile = '&#128515';
 var sadFace = '&#128530';
 var glassFace = '&#128526 ';
@@ -11,8 +13,13 @@ var intenseFace = '&#128556 ';
 var countClicks = 0;
 var countRightClick = 0;
 var bombsCount = 0;
+var countInterval;
 var victory;
 var elBtn = document.querySelector('.current-mood');
+var levelsContainer = document.querySelector('.levels');
+var elHintBtn = document.querySelector('.hint');
+
+
 var countMisplaceFlags = 0;//In case the flag wasn't set in the exact location of the mine
 var gLevel = {
     SIZE: 4,
@@ -20,6 +27,7 @@ var gLevel = {
 };
 var gGame = {
     isOn: false,
+    isHint: false,
     shownCount: 0,
     markedCount: 0,
     secsPassed: 0
@@ -28,6 +36,7 @@ var gGame = {
 
 function initGame() {
     createLives(livesAmount);
+    createHints(hintsAmount);
     gBoard = buildBoard(gLevel.SIZE);
     placeMines(gBoard, gLevel.MINES);
     checkMines();
@@ -46,6 +55,7 @@ function buildBoard(SIZE) {
 }
 
 function cellClicked(elCell, i, j) {
+    if (gGame.isHint) return;
     if (livesAmount === 0) {
         gameOver(sadFace)
         return
@@ -55,19 +65,20 @@ function cellClicked(elCell, i, j) {
     }
     elCell.classList.add('clicked');
     countClicks++;
+    if (countClicks === 1) {
+        startTimer();
+    }
     if (!gGame.isOn && gBoard[i][j].isMine) {
-        console.log(gGame.isOn)
         onFirstClick(elCell, i, j);
     } else {
         gGame.isOn = true;
     }
-
-    if (gBoard[i][j].isMine && gGame.isOn && !gBoard[i][j].isMarked) {
+    if (gBoard[i][j].isMine && gGame.isOn && !gBoard[i][j].isMarked && !gBoard[i][j].isShown) {
         livesAmount--;
         if (livesAmount === 0) {
+            stopTimer();
             printAllMines();
             elBtn.innerHTML = sadFace;
-
         }
         gBoard[i][j].isShown = true;
         elCell.innerHTML = MINE;
@@ -77,11 +88,18 @@ function cellClicked(elCell, i, j) {
     if (gGame.isOn) {
         var pos = { i: i, j: j }
         checkMines();
-        expandShown(pos);
+        if (gBoard[i][j].minesAroundCount > 0 && !gBoard[i][j].isMine && !gBoard[i][j].isMarked) {
+            var countMines = gBoard[i][j].minesAroundCount;
+            renderCell(i, j, countMines);
+        } else {
+            expandShown(pos);
+        }
+
     }
 }
 
 function rightMouseClick(elCell, i, j) {
+    if (gGame.isHint) return;
     if (livesAmount === 0 || victory) return;
     var strHtml = '';
     if (elCell.innerHTML === FLAG) {
@@ -111,23 +129,51 @@ function checkVictory() {
     return false;
 
 }
+function hint() {
+    if (hintsAmount === 0 || !livesAmount) {
 
+        return
+    }
+    gGame.isHint = true;
+}
+
+
+function hintClicked(elBtn, i, j) {
+    if (hintsAmount === 0) return
+    if (!gGame.isHint) return
+    var pos = { i: i, j: j };
+    hintsAmount--;
+    createHints(hintsAmount);
+    expandForHint(pos);
+
+    setTimeout(function () {
+        gGame.isHint = false;
+        unRevealForHint(pos)
+
+    }, 2000)
+    if (!gGame.isHint) return;
+}
 
 function restartGame() {
-    victory = false;
     setLevel(gLevel.SIZE);
     //For continuation of this project and gLevel set
 }
+
+
+
 function setLevel(SIZE) {
+    var time = document.querySelector('.time');
     gLevel.SIZE = SIZE;
     gLevel.MINES = (SIZE === 4) ? 2 : (SIZE === 8) ? 12 : 30;
     livesAmount = (SIZE === 4) ? 1 : 3;
+    hintsAmount = (SIZE === 4) ? 1 : 3;
+    elHintBtn.hidden = false;
     countClicks = 0;
+    time.innerText = '0:00'
     countMisplaceFlags = 0;
     victory = false;
     gGame.isOn = false;
     elBtn.innerHTML = smile;
-
     initGame();
 }
 

@@ -6,7 +6,7 @@ function renderBoard(mat, selector) {
             var cell = mat[i][j];
             var className = 'cell cell' + i + '-' + j;
             if (!cell.isShown) {
-                strHTML += `<td oncontextmenu="rightMouseClick(this,${i},${j})" onClick="cellClicked(this,${i},${j})"  class="  ${className}"></td>`
+                strHTML += `<td oncontextmenu="rightMouseClick(this,${i},${j})" onClick="cellClicked(this,${i},${j}),hintClicked(this,${i},${j})"  class="  ${className}"></td>`
             }
 
         }
@@ -39,6 +39,16 @@ function renderCell(i, j, value) {
 
 }
 
+function renderCellHtml(i, j, value) {
+    // Select the elCell and set the value
+    var className = document.querySelector(`.cell.cell${i}-${j}`);
+    // gBoard[i][j].isShown = true;
+    className.classList.add('clicked');
+    className.innerHTML = value;
+
+}
+
+
 
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
@@ -51,4 +61,24 @@ function getRandomColor() {
 
 function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+function startTimer() {
+    var timer = document.querySelector('.time');
+    var countMil = 0;
+    var countSec = 1;
+
+    countInterval = setInterval(() => {
+        timer.innerText = `${countSec}.${countMil}`
+        countMil++;
+        if (countMil > 100) {
+            countSec++;
+            countMil = 0;
+        }
+    }, 10)
+}
+
+function stopTimer() {
+    clearInterval(countInterval);
 }

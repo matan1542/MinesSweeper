@@ -10,7 +10,6 @@ table {
   box-shadow: 0px 0px 6px rgb(0, 0, 0);
 }
 td {
-  
   background-color: rgb(207, 137, 137);
   box-shadow: 0px 0px 2px rgb(196, 197, 182);
   border-radius: 10%;
@@ -28,7 +27,9 @@ td:hover {
   text-align: center;
   font-size: 1.5em;
 }
-
+.hint-hover.cell:hover{
+  border: 2px solid black;
+}
 .board-container {
   margin-top: 60px;
   width: 100%;
@@ -53,11 +54,23 @@ h1 {
   color: red;
 }
 .lives-amount {
+  margin: 10px auto;
   padding: 5px;
   font-size: 60px;
   color: red;
 }
+
+.hint-amount {
+  margin: 0;
+  font-size: 100px;
+  color: rgb(255, 208, 0);
+}
 .fas.fa-heart {
+  padding: 5px;
+  text-shadow: 2px 3px 10px rgb(37, 11, 5);
+}
+
+.far.fa-lightbulb {
   padding: 5px;
   text-shadow: 2px 3px 10px rgb(37, 11, 5);
 }
@@ -65,18 +78,19 @@ h1 {
 button {
   border: none;
   font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
   font-size: 19px;
   margin: 10px;
   width: 200px;
   height: 75px;
-  border-radius: 12px;
+  border-radius: 12%;
 }
 .level4 {
   box-shadow: 5px 5px 5px rgb(44, 44, 43);
   background-color: rgb(90, 243, 85);
 }
 .level4:hover {
-  background-color: rgb(64, 143, 61)
+  background-color: rgb(64, 143, 61);
 }
 
 .level8 {
@@ -99,3 +113,50 @@ button {
   box-shadow: 0px 0px 2px rgb(44, 44, 43);
   border-radius: 20%;
 }
+.hint{
+  border: none;
+  font-weight: 700;
+  width:125px;
+  height:50px;
+}
+.hint:hover{
+  background-color: rgb(187, 179, 179);
+  
+}
+.fas.fa-lightbulb{
+  text-shadow: 0px 0px 2px rgb(44, 44, 43);
+}
+.time-container{
+  margin:auto;
+  width: 30%;
+  height:80px;
+  background-color: rgb(145, 231, 145);
+  border-radius: 12px;
+
+  box-shadow: 2px 2px 2px rgb(44, 44, 43);
+
+}
+.time-text{
+  text-align:center;
+  padding-top:25px;
+  font-family: times, Times New Roman, times-roman, georgia, serif;
+  font-size:30px;
+  font-weight: 700;
+  color: rgb(255, 94, 0);
+}
+
+.time{
+  font-size:30px;
+  font-weight: 700;
+  color: black;
+}
+.fadeOut{
+  transition: 1.0s;
+  opacity: 0;
+  }
+  .fadeIn{
+    transition: 1.0s;
+    opacity: 1;
+    }
+    
+  
