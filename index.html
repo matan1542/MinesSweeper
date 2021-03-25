@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MinesSweeper</title>
+    <link rel="stylesheet" href="css/mines.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+        integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
+</head>
+
+<body onload="initGame()">
+    <div class="headline-container">
+        <h1 class="title-headline"> Welcome to the Mines Sweeper Game! be careful to where you go <i
+                class="fas fa-minus-circle"></i> </h1>
+        <button class="current-mood" onclick="restartGame()">&#128515 </button>
+        <div class="levels">
+            <button onclick="setLevel(4)" class="level4">Level 4 X 4</button>
+            <button onclick="setLevel(8)" class="level8">Level 8 X 8</button>
+            <button onclick="setLevel(12)" class="level12">Level 12 X 12</button>
+        </div>
+        <p class="lives-amount"> <span class="icons"></span> </p>
+    </div>
+    <div class="board-container"></div>
+    <!-- <button hidden class="reset" onclick="reset()">Restart the game please!</button> -->
+
+
+    <script src="js/mines.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/utils.js"></script>
+</body>
+
+</html>
