@@ -125,7 +125,7 @@ function cellClicked(elCell, i, j) {
 }
 
 function rightMouseClick(elCell, i, j) {
-    if (gGame.isHint || livesAmount === 0 || victory || gBoard[i][j].isShown) return;
+    if (gGame.isHint || livesAmount === 0 || victory || gBoard[i][j].isShown ) return;
     var strHtml = '';
     if (elCell.innerHTML === FLAG) {
         gBoard[i][j].isMarked = false;
@@ -167,7 +167,7 @@ function hint() {
 
 
 function hintClicked(i, j) {
-    if (hintsAmount === 0 || gBoard[i][j].isShown) return
+    if (hintsAmount === 0 || gBoard[i][j].isShown ) return
     if (!gGame.isHint) return
     var pos = { i: i, j: j };
     hintsAmount--;
@@ -185,7 +185,8 @@ function hintClicked(i, j) {
 
 function initializeSafeClick(safeBtn) {
     var emptyCells = (gLevel.SIZE ** 2) - gGame.shownCount;
-    if (safeClicks === 0 || !livesAmount || emptyCells <= gLevel.MINES) {
+    if(!gGame.isOn)return
+    if (safeClicks === 0 || !livesAmount || emptyCells <= gLevel.MINES ) {
         safeContainer.hidden = true;
         return
     }
