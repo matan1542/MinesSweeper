@@ -35,7 +35,6 @@ function renderCell(i, j, value) {
     // gBoard[i][j].isShown = true;
     className.classList.add('clicked');
     className.innerText = value;
-
 }
 
 function renderCellHtml(i, j, value) {
