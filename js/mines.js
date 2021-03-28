@@ -25,6 +25,7 @@ var levelsContainer = document.querySelector('.levels');
 var elHintBtn = document.querySelector('.hint');
 var elSafeSpan = document.querySelector('.safe-clicks');
 var safeContainer = document.querySelector('.safe-click-container');
+var customPlay = document.querySelector('.custom-play');
 
 
 
@@ -39,6 +40,7 @@ var gGame = {
     isOn: false,
     isHint: false,
     isSafe: false,
+    isManual: false,
     shownCount: 0,
     markedCount: 0,
     secsPassed: Infinity
@@ -72,6 +74,21 @@ function buildBoard(SIZE) {
 
 
 function cellClicked(elCell, i, j) {
+    if (countClicks === 0 && !gGame.isManual) {
+        customPlay.hidden = true;
+    }
+    var countBombs = countMinesFunc();
+    if (countBombs === gLevel.MINES - 1) {
+        customPlay.hidden = true;
+    }
+    if (countBombs === gLevel.MINES) {
+        gGame.isManual = false;
+    }
+    if (gGame.isManual) {
+        manuallyPlaceMines(i, j);
+        return;
+    }
+
     if (gGame.isHint || victory || gGame.isSafe || victoryUnShownBomb) return;
     if (livesAmount === 0) {
         gameOver(sadFace)
@@ -82,6 +99,7 @@ function cellClicked(elCell, i, j) {
     }
     elCell.classList.add('clicked');
     countClicks++;
+
     if (countClicks === 1) {
         startTimer();
     }
@@ -92,6 +110,7 @@ function cellClicked(elCell, i, j) {
     }
     if (gBoard[i][j].isMine && gGame.isOn && !gBoard[i][j].isMarked) {
         gBoard[i][j].isMarked = true;
+        
         bombShown++;
         victory = checkVictory();
         livesAmount--;
@@ -100,6 +119,7 @@ function cellClicked(elCell, i, j) {
             printAllMines();
             elBtn.innerHTML = sadFace;
         }
+        //step on mine and shouldn't go back for step
         if (!gBoard[i][j].isShown) {
             gBoard[i][j].isShown = true;
             gGame.shownCount++;
@@ -123,12 +143,13 @@ function cellClicked(elCell, i, j) {
         }
 
     }
+
     victoryUnShownBomb = victoryUnShownCount()
 
 }
 
 function rightMouseClick(elCell, i, j) {
-    if (gGame.isHint || livesAmount === 0 || victory || gBoard[i][j].isShown || victoryUnShownBomb) return;
+    if (gGame.isHint || livesAmount === 0 || victory || gBoard[i][j].isShown || victoryUnShownBomb || gGame.isManual) return;
     var strHtml = '';
     if (elCell.innerHTML === FLAG) {
         gBoard[i][j].isMarked = false;
@@ -141,7 +162,7 @@ function rightMouseClick(elCell, i, j) {
         strHtml = FLAG;
         elCell.innerHTML = strHtml;
     }
-
+    gGame.markedCount = countMisplaceFlags;
     victory = checkVictory();
     victoryUnShownBomb = victoryUnShownCount()
 
@@ -149,6 +170,21 @@ function rightMouseClick(elCell, i, j) {
 
 
 
+// function undoStep() {
+//     if (gGame.history.length > 0 && gGame.isOn) {
+//         var backStep = gGame.history.pop();
+//         console.log(backStep)
+//         gBoard = backStep.board;
+//         gGame.shownCount = backStep.shownCount;
+//         console.log(gGame.shownCount)
+//         gGame.markedCount = backStep.markedCount;
+//         gGame.lives = backStep.lives;
+//         gGame.hints = backStep.hints;
+//         renderBoard(gBoard, '.board-container');
+//         if (gGame.history.length === 0)
+//             initGame();
+//     }
+// }
 
 function checkVictory() {
     var markAmount = getMarkCount();
@@ -295,8 +331,10 @@ function setLevel(SIZE) {
     safeClicks = (SIZE === 4) ? 1 : 3;
     elHintBtn.hidden = false;
     victoryUnShownBomb = false;
+    customPlay.hidden = false;
     gGame.shownCount = 0;
     safeContainer.hidden = false;
+    // gGame.history = [];
     countClicks = 0;
     bombShown = 0;
 
@@ -334,6 +372,36 @@ function createLocalStorage() {
     localStorage.setItem("level12", Infinity);
 }
 
+function manuallyPlaceMinesBtn() {
+    cleanBoardFromMines();
+    gGame.isManual = true;
+}
+
+function cleanBoardFromMines() {
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[0].length; j++) {
+            gBoard[i][j].isMine = false;
+        }
+    }
+}
+
+function manuallyPlaceMines(idx, jdx) {
+    if (!gGame.isManual) return;
+    gBoard[idx][jdx].isMine = true;
+    checkMines()
+
+}
+function countMinesFunc() {
+    var count = 0;
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[0].length; j++) {
+            if (gBoard[i][j].isMine) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
 window.document.oncontextmenu = function () {
     return false;
 }

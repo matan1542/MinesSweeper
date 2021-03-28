@@ -27,7 +27,7 @@ td:hover {
   text-align: center;
   font-size: 1.5em;
 }
-.hint-hover.cell:hover{
+.hint-hover.cell:hover {
   border: 2px solid black;
 }
 .board-container {
@@ -40,7 +40,7 @@ td:hover {
   font-size: 48px;
 }
 h1 {
-  font-family: times, Times New Roman, times-roman, georgia, serif;
+  font-family: 'Dancing Script', cursive;
   color: rgb(123, 194, 42);
   text-shadow: 0px 0px 10px rgb(8, 8, 6);
   margin: 0;
@@ -77,7 +77,7 @@ h1 {
 
 button {
   border: none;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Dancing Script', cursive;
   font-weight: 700;
   font-size: 19px;
   margin: 10px;
@@ -104,7 +104,6 @@ button {
 .level12 {
   box-shadow: 5px 5px 5px rgb(44, 44, 43);
   background-color: rgb(255, 0, 0);
- 
 }
 .level12:hover {
   background-color: rgb(139, 37, 37);
@@ -114,91 +113,110 @@ button {
   box-shadow: 0px 0px 2px rgb(44, 44, 43);
   border-radius: 20%;
 }
-.hint{
+.hint {
   border: none;
   font-weight: 700;
-  width:125px;
-  height:50px;
+  width: 125px;
+  height: 50px;
 }
-.hint:hover{
+.hint:hover {
   background-color: rgb(187, 179, 179);
-  
 }
-.fas.fa-lightbulb{
+.fas.fa-lightbulb {
   text-shadow: 0px 0px 2px rgb(44, 44, 43);
 }
-.time-container{
-  margin:auto;
+.time-container {
+  margin: auto;
   width: 30%;
-  height:80px;
+  height: 80px;
   background-color: rgb(145, 231, 145);
   border-radius: 12px;
+  flex-direction: column;
 
   box-shadow: 2px 2px 2px rgb(44, 44, 43);
-
 }
-th{
-  font-family: Arial, Helvetica, sans-serif;
+th {
+  font-family: 'Dancing Script', cursive;
   color: rgb(0, 0, 0);
-  border-radius:12px;
+  border-radius: 12px;
 }
-.level4-score{
-  padding:10px;
+.level4-score {
+  padding: 10px;
   background-color: rgb(90, 243, 85);
 }
-.level8-score{
-  padding:10px;
+.level8-score {
+  padding: 10px;
   background-color: rgb(207, 230, 80);
-
 }
-.level12-score{
-  padding:10px;
+.level12-score {
+  padding: 10px;
   background-color: rgb(255, 0, 0);
-
 }
-.scores-container{
+.scores-container {
   margin-top: 10px;
   border: none;
-  width:70%;
-  height:125px;
+  width: 70%;
+  height: 125px;
 }
-.time-text{
-  text-align:center;
-  padding-top:25px;
-  font-family: times, Times New Roman, times-roman, georgia, serif;
-  font-size:30px;
+.time-text {
+  text-align: center;
+  padding-top: 25px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 30px;
   font-weight: 700;
   color: rgb(255, 94, 0);
 }
 
-.time{
-  font-size:30px;
+.time {
+  font-size: 30px;
   font-weight: 700;
   color: black;
 }
 
-.click-safe{
-  margin:0;
-  padding:0;
+.click-safe {
+  margin: 0;
+  padding: 0;
   font-weight: 400;
-  font-size:1.2rem;
-  
+  font-size: 1.2rem;
 }
-.safe-click{
+.safe-click {
   border: none;
   font-weight: 700;
-  width:170px;
-  height:50px;
+  width: 170px;
+  height: 50px;
 }
 
-.safe-click:hover{
+.safe-click:hover {
   background-color: rgb(187, 179, 179);
-  
 }
 
-.hint-safe-btns{
-  display:flex;
-  justify-content:center;
+.hint-safe-btns {
+  display: flex;
+  justify-content: center;
 }
 
-  
+@media (max-width: 1000px) {
+  body {
+    flex-shrink: 2; 
+  }
+  .time-container{
+    flex-shrink: 2; 
+  }
+  .cell {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 800px) {
+  .time-container{
+    align-content: center;
+    justify-items: center;
+    justify-content: center;
+    width:fit-content
+  }
+  .cell {
+    width: 30px;
+    height: 30px;
+  }
+}

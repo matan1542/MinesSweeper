@@ -1,6 +1,8 @@
 
 
 function onFirstClick(elCell, i, j) {
+ 
+    if (gGame.isManual && countClicks !== gLevel.MINES) return;
     gBoard[i][j].isMine = false;
     gBoard[i][j].isShown = true;
     gGame.shownCount++;
@@ -55,12 +57,12 @@ function expandShown(pos) {
     var countMines = gBoard[pos.i][pos.j].minesAroundCount;
     if (!gBoard[pos.i][pos.j].isMine && !gBoard[pos.i][pos.j].isMarked && !gBoard[pos.i][pos.j].isShown && !countMines) {
         gBoard[pos.i][pos.j].isShown = true;
-        renderCell(pos.i,pos.j, EMPTY);
+        renderCell(pos.i, pos.j, EMPTY);
         gGame.shownCount++;
         findNeighbors(pos.i, pos.j);
     } else if (countMines > 0 && !gBoard[pos.i][pos.j].isShown) {
         gBoard[pos.i][pos.j].isShown = true;
-        renderCell(pos.i,pos.j, countMines);
+        renderCell(pos.i, pos.j, countMines);
         gGame.shownCount++;
     }
 }
@@ -105,12 +107,12 @@ function unRevealForHint(pos) {
         for (var j = pos.j - 1; j <= pos.j + 1; j++) {
             if (j < 0 || j >= gBoard[0].length) continue;
             var className = document.querySelector(`.cell.cell${i}-${j}`);
-            if(gBoard[i][j].isMarked && gBoard[i][j].isMine && !gBoard[i][j].isShown){
+            if (gBoard[i][j].isMarked && gBoard[i][j].isMine && !gBoard[i][j].isShown) {
                 className.classList.remove('clicked')
                 className.innerHTML = FLAG;
                 gBoard[i][j].isMarked = true;
             }
-            if (!gBoard[i][j].isMarked && !gBoard[i][j].isShown ) {
+            if (!gBoard[i][j].isMarked && !gBoard[i][j].isShown) {
                 className.classList.remove('clicked')
                 var countMines = ' ';
                 className.innerText = countMines;
@@ -198,7 +200,7 @@ function getMarkCount() {
                 isMarked.push(gBoard[i][j]);
                 countMark++;
             }
-            if ( gBoard[i][j].isMine && gBoard[i][j].isShown ) {
+            if (gBoard[i][j].isMine && gBoard[i][j].isShown) {
                 isMarked.push(gBoard[i][j]);
             }
         }

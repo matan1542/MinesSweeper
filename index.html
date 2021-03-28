@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
         integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body onload="initGame()">
@@ -40,17 +40,20 @@
     </div>
     <p class="hint-amount"> <span class="hint-icons"></span> </p>
     <div class="hint-safe-btns">
-        
         <button onclick="hint()" class="hint">Hint <i class="fas fa-lightbulb"></i></button>
-       <div class="safe-click-container">
-        <button onclick="initializeSafeClick(this)" class="safe-click">Safe Clicks <i class="fas fa-user-shield"></i></i></button>
-        <p class="click-safe">Clicks remaining <span class="safe-clicks">1</span> </p>
-       </div>
+        <div class="safe-click-container">
+            <button onclick="initializeSafeClick(this)" class="safe-click">Safe Clicks <i
+                    class="fas fa-user-shield"></i></i></button>
+            <p class="click-safe">Clicks remaining <span class="safe-clicks">1</span> </p>
+        </div>
     </div>
     <div>
 
         <p class="hint-amount"> <span class="hint-icons"></span> </p>
     </div>
+    <button class="custom-play"onclick="manuallyPlaceMinesBtn()">Custom place Mines</button>
+    <!-- <button class="undo btn" onclick="undoStep()">⏮UNDO</button> -->
+
     <div class="board-container"></div>
     <!-- <button hidden class="reset" onclick="reset()">Restart the game please!</button> -->
 
